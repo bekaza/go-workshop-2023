@@ -5,4 +5,5 @@ use (
 	./demo/02-testing/example
 	./demo/02-testing/testify
 	./demo/03-project-layout/flat
+	./demo/04-qr-poc
 )
