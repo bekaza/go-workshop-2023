@@ -2,7 +2,7 @@ go 1.20
 
 use (
 	./demo/01-hello
-	./demo/02-project-layout/flat
-	./demo/03-testing/example
-	./demo/03-testing/testify
+	./demo/02-testing/example
+	./demo/02-testing/testify
+	./demo/03-project-layout/flat
 )
