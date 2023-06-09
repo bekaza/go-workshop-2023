@@ -7,4 +7,5 @@ use (
 	./demo/03-project-layout/flat
 	./demo/04-qr-poc
 	./demo/05-api-qr-payment/rest-api
+	./demo/05-api-qr-payment/tutorial-wire
 )
