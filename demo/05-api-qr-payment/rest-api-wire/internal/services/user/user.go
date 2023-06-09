@@ -2,8 +2,12 @@ package user
 
 import (
 	"context"
-	"example/restapi/internal/repository/user"
+	"example/apiwire/internal/repository/user"
+
+	"github.com/google/wire"
 )
+
+var UserServiceSet = wire.NewSet(ProvideUserService)
 
 type UserService interface {
 	CreateUser(ctx context.Context, username string) error

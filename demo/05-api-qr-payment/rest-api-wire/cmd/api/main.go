@@ -3,10 +3,8 @@ package main
 import (
 	"context"
 	"errors"
-	"example/restapi/cmd/api/handler"
-	"example/restapi/cmd/api/router"
-	userRepo "example/restapi/internal/repository/user"
-	"example/restapi/internal/services/user"
+	"example/apiwire/cmd/api/di"
+	"example/apiwire/cmd/api/router"
 	"net/http"
 	"os"
 	"os/signal"
@@ -26,18 +24,8 @@ func main() {
 	if err != nil {
 		panic("can not connect to database")
 	}
-
-	userRepository := userRepo.ProvideUserRepo(conn)
-	userService := user.ProvideUserService(userRepository)
-	userHandler := handler.UserHandler{
-		UserService: userService,
-	}
-	paymentHandler := handler.PaymentHandler{}
-	handler := handler.Handler{
-		UserHandler:    userHandler,
-		PaymentHandler: paymentHandler,
-	}
-	ginSrv := router.GenerateRouter(handler)
+	handlerWire := di.InitializeAPI(conn)
+	ginSrv := router.GenerateRouter(handlerWire)
 
 	srv := &http.Server{
 		Addr:    ":8080",

@@ -3,9 +3,11 @@ go 1.20
 use (
 	./demo/01-hello
 	./demo/02-testing/example
+	./demo/02-testing/sql-mock-test
 	./demo/02-testing/testify
 	./demo/03-project-layout/flat
 	./demo/04-qr-poc
 	./demo/05-api-qr-payment/rest-api
+	./demo/05-api-qr-payment/rest-api-wire
 	./demo/05-api-qr-payment/tutorial-wire
 )
