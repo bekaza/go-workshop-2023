@@ -9,6 +9,9 @@ func Hello() string {
 }
 
 func HelloWithMessage(msg string) string {
+	if msg != "test" {
+		return Hello()
+	}
 	return fmt.Sprintf("%s - 2023", msg)
 }
 

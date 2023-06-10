@@ -34,9 +34,6 @@ func (e Event) Start() {
 }
 
 func main() {
-	message := NewMessage()
-	greeter := NewGreeter(message)
-	event := NewEvent(greeter)
-
+	event := InitializeEvent()
 	event.Start()
 }

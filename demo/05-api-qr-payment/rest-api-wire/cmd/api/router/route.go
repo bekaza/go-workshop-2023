@@ -13,7 +13,7 @@ func GenerateRouter(h handler.Handler) *gin.Engine {
 	router.Use(gin.Recovery())
 
 	router.GET("/user", h.UserHandler.RegisterUserHandler)
-	// router.POST("/qr", h.PaymentHandler.GenerateQr)
+	router.POST("/qr", h.PaymentHandler.GenerateQr)
 
 	return router
 }

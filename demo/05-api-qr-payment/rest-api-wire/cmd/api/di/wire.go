@@ -8,6 +8,7 @@ import (
 	"example/apiwire/internal/config"
 	"example/apiwire/internal/repository"
 	userRepo "example/apiwire/internal/repository/user"
+	"example/apiwire/internal/services/payment"
 	"example/apiwire/internal/services/user"
 
 	"github.com/google/wire"
@@ -20,6 +21,7 @@ func InitializeAPI(config config.AppConfig) (handler.Handler, func()) {
 
 var MainBindingSet = wire.NewSet(
 	user.UserServiceSet,
+	payment.PaymentServiceSet,
 )
 
 var DBSet = wire.NewSet(
@@ -29,5 +31,6 @@ var DBSet = wire.NewSet(
 
 var HandlerSet = wire.NewSet(
 	handler.UserHandlerSet,
+	handler.PaymentHandlerSet,
 	handler.HandlerSet,
 )

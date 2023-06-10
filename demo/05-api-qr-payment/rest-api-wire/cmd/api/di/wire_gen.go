@@ -11,6 +11,7 @@ import (
 	"example/apiwire/internal/config"
 	"example/apiwire/internal/repository"
 	"example/apiwire/internal/repository/user"
+	"example/apiwire/internal/services/payment"
 	user2 "example/apiwire/internal/services/user"
 	"github.com/google/wire"
 )
@@ -22,7 +23,9 @@ func InitializeAPI(config2 config.AppConfig) (handler.Handler, func()) {
 	userRepo := user.ProvideUserRepo(db)
 	userService := user2.ProvideUserService(userRepo)
 	userHandler := handler.ProvideUserHandler(userService)
-	handlerHandler := handler.NewHandler(userHandler)
+	paymentService := payment.ProvidePaymentService(config2, userRepo)
+	paymentHandler := handler.ProvidePaymentHandler(paymentService)
+	handlerHandler := handler.NewHandler(userHandler, paymentHandler)
 	return handlerHandler, func() {
 		cleanup()
 	}
@@ -30,8 +33,8 @@ func InitializeAPI(config2 config.AppConfig) (handler.Handler, func()) {
 
 // wire.go:
 
-var MainBindingSet = wire.NewSet(user2.UserServiceSet)
+var MainBindingSet = wire.NewSet(user2.UserServiceSet, payment.PaymentServiceSet)
 
 var DBSet = wire.NewSet(repository.PostgresDBSet, user.UserDBSet)
 
-var HandlerSet = wire.NewSet(handler.UserHandlerSet, handler.HandlerSet)
+var HandlerSet = wire.NewSet(handler.UserHandlerSet, handler.PaymentHandlerSet, handler.HandlerSet)

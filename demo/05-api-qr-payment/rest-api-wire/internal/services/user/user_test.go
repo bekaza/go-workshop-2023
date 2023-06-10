@@ -40,7 +40,7 @@ func (s *testUserServiceSuite) TestUserService_CreateUser() {
 		ctx      = context.TODO()
 		username = "test-name"
 	)
-	s.mockUserRepo.EXPECT().Create(ctx, username).Return(nil)
+	s.mockUserRepo.EXPECT().Create(ctx, username).Return("nil")
 
 	err := s.underTest.CreateUser(ctx, username)
 	s.Require().NoError(err)

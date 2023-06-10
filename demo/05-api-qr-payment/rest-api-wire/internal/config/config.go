@@ -13,6 +13,7 @@ import (
 type AppConfig struct {
 	Env      EnvConfig
 	Database DatabaseConfig
+	QrEnv    QrConfig
 }
 
 type EnvConfig struct {
@@ -26,6 +27,10 @@ type DatabaseConfig struct {
 	DatabaseName string `envconfig:"DB_NAME"`
 	Username     string `envconfig:"DB_USERNAME"`
 	Password     string `envconfig:"DB_PASSWORD"`
+}
+
+type QrConfig struct {
+	AmountLimit float64 `envconfig:"QR_AMOUNT_LIMIT"`
 }
 
 func (cfg *AppConfig) Init() {
