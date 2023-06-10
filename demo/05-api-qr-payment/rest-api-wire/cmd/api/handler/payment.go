@@ -2,6 +2,7 @@ package handler
 
 import (
 	"example/apiwire/cmd/api/handler/request"
+	"example/apiwire/cmd/api/handler/validator"
 	"example/apiwire/internal/services/payment"
 	"net/http"
 
@@ -25,6 +26,18 @@ func (svc PaymentHandler) GenerateQr(c *gin.Context) {
 	var request request.GenerateQrRequest
 	if err := c.BindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid request"})
+		return
 	}
-	c.Status(http.StatusNoContent)
+	if err := validator.ValidateQRPayment(request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid request"})
+		return
+	}
+
+	qrStr, err := svc.PaymentSvc.GenerateQr(c.Request.Context(), request.PromptPayID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "internal error"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"qr": qrStr, "message": "success"})
 }
