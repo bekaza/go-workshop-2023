@@ -5,16 +5,17 @@ package di
 
 import (
 	"example/apiwire/cmd/api/handler"
+	"example/apiwire/internal/config"
+	"example/apiwire/internal/repository"
 	userRepo "example/apiwire/internal/repository/user"
 	"example/apiwire/internal/services/user"
 
 	"github.com/google/wire"
-	"gorm.io/gorm"
 )
 
-func InitializeAPI(dbConn *gorm.DB) handler.Handler {
+func InitializeAPI(config config.AppConfig) (handler.Handler, func()) {
 	wire.Build(DBSet, MainBindingSet, HandlerSet)
-	return handler.Handler{}
+	return handler.Handler{}, nil
 }
 
 var MainBindingSet = wire.NewSet(
@@ -22,6 +23,7 @@ var MainBindingSet = wire.NewSet(
 )
 
 var DBSet = wire.NewSet(
+	repository.PostgresDBSet,
 	userRepo.UserDBSet,
 )
 

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"example/apiwire/cmd/api/di"
 	"example/apiwire/cmd/api/router"
+	"example/apiwire/internal/config"
 	"net/http"
 	"os"
 	"os/signal"
@@ -12,19 +13,12 @@ import (
 	"time"
 
 	"github.com/sirupsen/logrus"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
 
 func main() {
-	conn, err := gorm.Open(postgres.New(postgres.Config{
-		DSN:                  "host=localhost user=postgres password=example dbname=workshop port=5432 sslmode=disable TimeZone=Asia/Bangkok",
-		PreferSimpleProtocol: true, // disables implicit prepared statement usage
-	}), &gorm.Config{})
-	if err != nil {
-		panic("can not connect to database")
-	}
-	handlerWire := di.InitializeAPI(conn)
+	appConfig := config.LoadAppConfig()
+	handlerWire, cleanup := di.InitializeAPI(*appConfig)
+	defer cleanup()
 	ginSrv := router.GenerateRouter(handlerWire)
 
 	srv := &http.Server{

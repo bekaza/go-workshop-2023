@@ -8,26 +8,30 @@ package di
 
 import (
 	"example/apiwire/cmd/api/handler"
+	"example/apiwire/internal/config"
+	"example/apiwire/internal/repository"
 	"example/apiwire/internal/repository/user"
 	user2 "example/apiwire/internal/services/user"
 	"github.com/google/wire"
-	"gorm.io/gorm"
 )
 
 // Injectors from wire.go:
 
-func InitializeAPI(dbConn *gorm.DB) handler.Handler {
-	userRepo := user.ProvideUserRepo(dbConn)
+func InitializeAPI(config2 config.AppConfig) (handler.Handler, func()) {
+	db, cleanup := repository.NewPostgresConnection(config2)
+	userRepo := user.ProvideUserRepo(db)
 	userService := user2.ProvideUserService(userRepo)
 	userHandler := handler.ProvideUserHandler(userService)
 	handlerHandler := handler.NewHandler(userHandler)
-	return handlerHandler
+	return handlerHandler, func() {
+		cleanup()
+	}
 }
 
 // wire.go:
 
 var MainBindingSet = wire.NewSet(user2.UserServiceSet)
 
-var DBSet = wire.NewSet(user.UserDBSet)
+var DBSet = wire.NewSet(repository.PostgresDBSet, user.UserDBSet)
 
 var HandlerSet = wire.NewSet(handler.UserHandlerSet, handler.HandlerSet)
