@@ -30,3 +30,8 @@ Run command
 ```
 wire
 ```
+
+compile and run
+```
+go run .
+```
